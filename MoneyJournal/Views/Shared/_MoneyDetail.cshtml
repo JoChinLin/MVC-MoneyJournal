@@ -18,13 +18,13 @@
                         <tr>
                             <td>@i</td>
                             <td>
-                                @Html.DisplayFor(model => item.CostType)
+                                @item.CostType
                             </td>
                             <td>
-                                @Html.DisplayFor(model => item.CostDate)
+                                @item.CostDate.ToString("yyyy-MM-dd")
                             </td>
                             <td>
-                                @Html.DisplayFor(model => item.Amount)
+                                @item.Amount.ToString("N0")
                             </td>
                         </tr>
 
