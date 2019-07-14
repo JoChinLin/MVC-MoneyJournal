@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using MoneyJournal.Models.EntityModels;
 using MoneyJournal.Models.ViewModels;
 
 namespace MoneyJournal.Controllers
@@ -20,14 +21,18 @@ namespace MoneyJournal.Controllers
 
         public ActionResult Index()
         {
-            var dataQuery = dataInit.AsQueryable();
-
-            var dataList = dataQuery.OrderBy(oo => oo.CostDate).Select(ss => new MoneyUsage()
+            var dataList = new List<MoneyUsage>();
+            using (var db = new AccountBookDbContext())
             {
-                CostType = ss.CostType,
-                CostDate = ss.CostDate,
-                Amount = ss.Amount
-            }).ToList();
+                var query = db.AccountBook.Select(s => new MoneyUsage()
+                {
+                    CostType = ((CostCategoryEnum)s.Categoryyy).ToString(),
+                    CostDate = s.Dateee,
+                    Amount = s.Amounttt
+                });
+
+                dataList = query.ToList();
+            }
 
             return View(dataList);
         }
@@ -74,6 +79,12 @@ namespace MoneyJournal.Controllers
 
 
     }
+    public enum CostCategoryEnum
+    {
+        支出 = 0,
+        收入 = 1
+    }
+
     internal class RandomGenerator
     {
         private static readonly Random random = new Random();
