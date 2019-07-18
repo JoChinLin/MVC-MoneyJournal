@@ -4,12 +4,14 @@ using System.Linq;
 using System.Web.Mvc;
 using MoneyJournal.Models.EntityModels;
 using MoneyJournal.Models.ViewModels;
+using MoneyJournal.Services;
 
 namespace MoneyJournal.Controllers
 {
     public class HomeController : Controller
     {
         private List<MoneyUsage> dataInit = null;
+        private AccountingService _accountingService = null;
         public HomeController()
         {
 
@@ -17,22 +19,18 @@ namespace MoneyJournal.Controllers
             {
                 dataInit = this.GetMoneyUsageData();
             }
+            if (_accountingService == null)
+            {
+                _accountingService=new AccountingService();
+                
+            }
         }
 
         public ActionResult Index()
         {
             var dataList = new List<MoneyUsage>();
-            using (var db = new AccountBookDbContext())
-            {
-                var query = db.AccountBook.Select(s => new MoneyUsage()
-                {
-                    CostType = ((CostCategoryEnum)s.Categoryyy).ToString(),
-                    CostDate = s.Dateee,
-                    Amount = s.Amounttt
-                });
 
-                dataList = query.ToList();
-            }
+            dataList = _accountingService.GetAccountingDataList();
 
             return View(dataList);
         }
